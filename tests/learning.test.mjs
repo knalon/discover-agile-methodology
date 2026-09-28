@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+const mem=new Map();
+globalThis.localStorage={getItem:k=>mem.get(k)||null,setItem:(k,v)=>mem.set(k,v)};
+globalThis.window={dispatchEvent:()=>{}};
+globalThis.Event=class {constructor(type){this.type=type}};
+const {stories,backlogItems,sprints}=await import('../js/data/content.js');
+const store=await import('../js/core/state.js');
+const storyPage=await import('../js/pages/stories.js');
+const backlogPage=await import('../js/pages/backlog.js');
+assert.equal(stories.filter(s=>s.sprint).length,9);
+assert.deepEqual([1,2,3,4].map(n=>backlogItems.filter(x=>x.sprint===n).length),[2,6,3,3]);
+assert.equal(backlogItems.length,14);
+assert.equal(sprints.reduce((sum,s)=>sum+s.tasks.length,0),25);
+assert.equal((storyPage.render().match(/data-check-story=/g)||[]).length,9);
+assert.match(backlogPage.render(),/Sprint 1/);
+assert.doesNotMatch(backlogPage.render(),/No Fibonacci estimates/);
+assert.match(backlogPage.render(),/data-backlog-stage="1"/);
+store.state.backlogAttempted[1]=true;
+store.state.priorities['EN-01']='Should';
+assert.match(backlogPage.render(),/Expected: <b>Must<\/b>/);
+for(let n=1;n<=4;n++){
+ store.state.backlogStage=n;
+ for(const item of backlogItems.filter(x=>x.sprint===n))store.state.priorities[item.id]=item.priority;
+ store.state.backlogChecked[n]=true;
+ assert.ok(backlogPage.render().includes(`Sprint ${n}`));
+ assert.match(backlogPage.render(),new RegExp(`data-backlog-stage=\"${n}\"`));
+}
+store.state.backlogStage=1;
+assert.match(backlogPage.render(),/Sprint 1 · Discovery & design/);
+store.state.backlogStage=4;
+assert.match(backlogPage.render(),/Sprint 4 · Verification & handoff/);
+store.state.storyAnswers=Object.fromEntries(stories.filter(s=>s.sprint).map(s=>[s.id,'correct']));
+assert.match(storyPage.render(),/9 \/ 9/);
+assert.equal(store.award('story',90),true);
+assert.equal(store.award('story',90),false);
+console.log('PASS: nine required story cards, 14 backlog entries across four stages, per-item correction, XP once');
