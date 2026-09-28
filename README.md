@@ -53,3 +53,6 @@ The Product Backlog's four Sprint stage tabs are interactive. After completing a
 ## Product Backlog → Sprint task traceability (v7)
 
 Every Sprint page now displays a collapsible relationship map connecting its Product Backlog items to the concrete tasks in the Kanban board. Task cards also display parent backlog IDs. The numbers are intentionally different: one backlog requirement can involve multiple implementation tasks, and a technical task may support multiple requirements. Sprint 4's deferred chatbot proposal has no assigned task. Run `node tests/traceability.test.mjs` to verify all links.
+
+### Presentation refinements
+The Review lane is labelled “Review (Peer Review)” as an academic clarification; this does not introduce a separate approval gate or change task transitions. The interface prefers Montserrat (loaded via Google Fonts when online) and uses system fonts when offline.
