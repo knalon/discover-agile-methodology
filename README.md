@@ -1,58 +1,26 @@
-# SmartStudy Agile Quest — v5 Modular Professor Edition
+# SmartStudy Agile Quest v8 — Incremental Agile Learning Simulation
 
-A **static, modular, browser-based Agile/Scrum learning simulation** grounded in the SmartStudy Planner academic application. No Django, MySQL, build tool, npm, or server-side runtime is required for the *game*. The separate real SmartStudy Planner uses Django, HTML/CSS/Bootstrap and MySQL.
+## Run
+Open this folder in VS Code and serve `index.html` using Live Server, or publish the folder to GitHub Pages. No backend or build tools are needed. Progress is saved in the browser under `smartstudy-agile-quest-v8` (intentionally separate from v7 because the learning state changed).
 
-## Start
+## Learning journey
+Meet Maya → complete nine user-story exercises → prioritise one initial Product Backlog using MoSCoW → four iterative Sprints → final knowledge check.
 
-Open this folder in VS Code and use **Live Server** on `index.html` (recommended), or publish its contents to GitHub Pages. Open the site and start at Mission 00. Because JavaScript uses ES modules, opening via `file://` is not supported reliably.
+Every Sprint: select a small subset of **currently available** backlog items → implement and verify two concrete tasks per selected item → inspect the Increment at Sprint Review → record a process improvement at Retrospective → respond to Maya's feedback and update priorities for subsequent Sprint Planning. No predefined assignment of backlog items to Sprints 1–4. At least one item remains for later refinement.
 
-## Modular structure
+Sprint 1 can deliver Subjects + Assignments, rather than only planning documents. Later Sprints build on the tested Increment. Sprint 1–3 feedback changes the required priority of the next core outcome. Sprint 4 concludes with an honest accounting of remaining backlog items.
 
-- `index.html` — thin application entry point
-- `css/base.css` — shared design and responsive foundation
-- `css/components.css` — reusable UI components
-- `css/mission.css` — learning mission styles
-- `css/board.css` — Kanban board styles
-- `css/accessibility.css` — focus, print, motion preferences
-- `js/app.js` — routing/controller composition
-- `js/core/state.js` — persistence, one-time XP, unlock rules
-- `js/core/router.js` — mission routes
-- `js/core/helpers.js` — safe rendering helpers
-- `js/data/content.js` — stories, four Sprint Backlogs, quiz
-- `js/components/shell.js` — navigation, player profile, reset
-- `js/components/board.js` — shared Sprint Kanban rendering
-- `js/components/quiz.js` — shared quiz logic
-- `js/pages/*.js` — **independent mission modules** (discovery, stories, backlog, reusable Sprint controller, final)
-- `tests/` — smoke tests for modules and state transitions
+## Modular architecture
+- `js/data/agile.js`: scenario, MoSCoW baseline, acceptance tasks, capacity, Sprint Goals and feedback.
+- `js/data/engine.js`: pure selectors and rules for Sprint planning and adaptation.
+- `js/pages/backlog.js`: initial MoSCoW workshop.
+- `js/pages/sprint.js`: reusable four-Sprint controller.
+- `js/core/state.js`: isolated v8 browser storage, unlocks and one-time XP rewards.
+- `js/components/board.js`: Kanban lane transitions.
+- `js/pages/stories.js`, `welcome.js`, `final.js`: independent missions.
+- `css/agile.css`: new Sprint planning styles; Montserrat retained.
 
-## Learning sequence
+The Sprint Review is a product inspection; the Retrospective concerns team process. “Review (Peer Review)” is only an academic label on the Kanban lane; it adds no extra gate.
 
-00 Meet Maya → 01 User Stories → 02 Product Backlog (MoSCoW; no Fibonacci) → 03 Sprint 1: discovery/design → 04 Sprint 2: Django/MySQL core → 05 Sprint 3: Excel/Power BI/email → 06 Sprint 4: verification/handoff → 07 Final Scrum review.
-
-Every Sprint contains an explicit task-level Sprint Backlog, an ordered Kanban progression, a Sprint Review question and a Retrospective improvement. Tasks must reach verified Done before the Review unlocks. Progress is saved in the browser's localStorage key `smartstudy-agile-quest-v5`; it is local to the browser/device. Mission rewards are idempotent, even after refresh. Reset progress clears the v5 game save. Previous v1–v3 saves are intentionally not imported to avoid mixing incompatible progress models.
-
-## Deployment
-
-Copy the **contents** of this directory (including `index.html`, `css`, `js`, `assets`) into your GitHub repository root. GitHub → Settings → Pages → Deploy from branch → `main` / `(root)`. Relative paths support project repositories under `/repo-name/`.
-
-## Scope / integrity
-
-This is an educational simulation of Scrum, not a hosted copy of the Django SmartStudy application. The user-reported SmartStudy implementation is reflected as a case study; the game does not claim to test the Django backend. Sprint allocation is an instructional reconstruction, not a verified historical timeline. Browser localStorage is not secure or suitable for authoritative grading. Do not store credentials in frontend code.
-
-
-## v5 learning improvements
-- All nine implementation user stories are mandatory, individually checked multiple-choice questions. No exact sentence typing.
-- Product Backlog practice progresses through four Sprint groupings, including discovery and verification enablers and one deferred chatbot proposal.
-- Row-level feedback shows which priorities are correct/incorrect, the expected category, and an explanation after checking.
-- A single Product Backlog is still distinguished from Sprint Backlogs in the teaching text.
-- Prior v4 browser progress is read as a fallback; v5 writes its own key. To experience the new story workshop from scratch, use Reset progress.
-
-## v7 navigation refinement
-The Product Backlog's four Sprint stage tabs are interactive. After completing a stage, learners may revisit that stage without losing its validated answers. Later stages remain locked until the preceding stage has been validated. The learner-facing wording no longer mentions Fibonacci estimation.
-
-## Product Backlog → Sprint task traceability (v7)
-
-Every Sprint page now displays a collapsible relationship map connecting its Product Backlog items to the concrete tasks in the Kanban board. Task cards also display parent backlog IDs. The numbers are intentionally different: one backlog requirement can involve multiple implementation tasks, and a technical task may support multiple requirements. Sprint 4's deferred chatbot proposal has no assigned task. Run `node tests/traceability.test.mjs` to verify all links.
-
-### Presentation refinements
-The Review lane is labelled “Review (Peer Review)” as an academic clarification; this does not introduce a separate approval gate or change task transitions. The interface prefers Montserrat (loaded via Google Fonts when online) and uses system fonts when offline.
+## Notes
+This is a classroom simulation, not a production Scrum tracking tool. For this guided scenario, the next feedback-triggered feature is held for its later Sprint to guarantee that the learner can respond to it. The choice of exactly 2/2/2/2 backlog items per Sprint is a learning constraint rather than a Scrum rule. Priorities and feedback are illustrative; the actual Django app is a separate project. Browser interaction testing is recommended before classroom deployment.
