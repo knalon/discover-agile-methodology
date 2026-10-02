@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {items,sprintPlan,sprintLengths,rejectedInSprint1} from '../js/data/agile.js';
+import {plannedFor,sprintTasks,validSelection} from '../js/data/engine.js';
+assert.equal(items.length,10);
+assert.equal(items.filter(x=>x.id!=='US-10').length,9);
+assert.deepEqual(Object.values(sprintPlan).map(x=>x.length),[3,2,2,2]);
+assert.equal(Object.values(sprintPlan).flat().length,9);
+assert.equal(sprintLengths.reduce((a,b)=>a+b.days,0),30);
+const state={priorities:{},sprints:{1:{review:true,rejectedPbi:'US-04'}}};
+assert.deepEqual(plannedFor(state,2),['US-04','US-03','US-05']);
+assert.equal(sprintTasks(['US-04'],2)[0].id,'US-04-CF1');
+assert.equal(validSelection(state,2,['US-04','US-03','US-05']),true);
+assert.equal(rejectedInSprint1.task,'US-04-T2');
+console.log('PASS: v9 backlog distribution, one-month Sprint lengths and review-driven carry-forward');
